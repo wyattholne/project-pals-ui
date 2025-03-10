@@ -16,7 +16,7 @@ export function MediaRecorder({ className }: MediaRecorderProps) {
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
   const mediaStreamRef = useRef<MediaStream | null>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const mediaRecorderRef = useRef<globalThis.MediaRecorder | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -115,23 +115,23 @@ export function MediaRecorder({ className }: MediaRecorderProps) {
     if (!mediaStreamRef.current) return;
     
     recordedChunksRef.current = [];
-    const mediaRecorder = new MediaRecorder(mediaStreamRef.current);
+    const recorder = new globalThis.MediaRecorder(mediaStreamRef.current);
     
-    mediaRecorder.ondataavailable = (event) => {
+    recorder.ondataavailable = (event) => {
       if (event.data.size > 0) {
         recordedChunksRef.current.push(event.data);
       }
     };
     
-    mediaRecorder.onstop = () => {
+    recorder.onstop = () => {
       const blob = new Blob(recordedChunksRef.current, {
         type: activeMedia === "microphone" ? "audio/webm" : "video/webm",
       });
       setRecordedBlob(blob);
     };
     
-    mediaRecorderRef.current = mediaRecorder;
-    mediaRecorder.start();
+    mediaRecorderRef.current = recorder;
+    recorder.start();
     setIsRecording(true);
     startTimer();
     toast.success("Recording started");
