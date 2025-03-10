@@ -12,7 +12,7 @@ export function Dashboard() {
   return (
     <div className="h-full flex flex-col">
       <div className="p-4 border-b">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs defaultValue="chat" value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full max-w-md mx-auto grid-cols-3">
             <TabsTrigger value="chat" className="flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />
@@ -27,19 +27,17 @@ export function Dashboard() {
               <span className="hidden sm:inline">Media</span>
             </TabsTrigger>
           </TabsList>
+          
+          <TabsContent value="chat" className="h-full m-0 border-none">
+            <ChatInterface />
+          </TabsContent>
+          <TabsContent value="code" className="h-full m-0 border-none">
+            <CodeEditor />
+          </TabsContent>
+          <TabsContent value="media" className="h-full m-0 border-none">
+            <MediaRecorder />
+          </TabsContent>
         </Tabs>
-      </div>
-      
-      <div className="flex-1">
-        <TabsContent value="chat" className="h-full m-0 border-none">
-          <ChatInterface />
-        </TabsContent>
-        <TabsContent value="code" className="h-full m-0 border-none">
-          <CodeEditor />
-        </TabsContent>
-        <TabsContent value="media" className="h-full m-0 border-none">
-          <MediaRecorder />
-        </TabsContent>
       </div>
     </div>
   );
